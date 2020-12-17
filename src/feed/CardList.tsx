@@ -8,21 +8,31 @@ import {
 
 // ...
 
-type Props = {
+type CardListProps = {
   items: Item[]
 }
 
-export const CardList = ({ items }: Props) => {
+export const CardList = ({ items }: CardListProps) => {
   return (
     <>
-      {items.map(({ title, image }, index) => (
+      {items.map((item, index) => (
         <Card
           key={index}
+
+          {...item}
+          // size="large"
+        />
+      ))}
+
+      {/* {items.map(({ title, image }, index) => (
+        <Card
+          key={index}
+
           title={title}
           image={image}
           // size="large"
         />
-      ))}
+      ))} */}
     </>
   )
 }

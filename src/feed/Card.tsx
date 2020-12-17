@@ -4,13 +4,13 @@ import './style.css';
 
 type Size = 'small' | 'medium' | 'large';
 
-type Props = {
+type CardProps = {
   title: string;
   image: string;
   size?: Size;
 }
 
-export const Card = ({ title, image, size = 'medium' }: Props) => {
+export const Card = ({ title, image, size = 'medium' }: CardProps) => {
   const sizeClass = `Card__${size}`;
 
   return (

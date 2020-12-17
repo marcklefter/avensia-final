@@ -11,7 +11,7 @@ import {
 const items: Item[] = [
   {
     title: 'first item',
-    image: 'http://via.placeholder.com/350x150'
+    image: 'http://via.placeholder.com/350x150', 
   },
   {
     title: 'second item',

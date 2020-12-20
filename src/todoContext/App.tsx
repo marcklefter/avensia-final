@@ -1,6 +1,7 @@
 import React, {
   useState,
-  useEffect
+  useEffect,
+  useContext
 } from 'react';
 
 import {
@@ -12,8 +13,14 @@ import {
 } from './Todo';
 
 import {
-  TodoType
+  TodoType,
+  FetchedTodoType,
+  Status
 } from './types';
+
+import {
+  DependencyContext
+} from './DependencyContext';
 
 // ...
 
@@ -22,17 +29,22 @@ const style = {
   margin: '150px auto auto'
 };
 
-// const initialTodos = require('./todos.json').map(
-//   ({ userId, ...todo }: ({ userId: number } & TodoType)) => todo
-// );
-
 // ...
 
-type Status = 'idle' | 'loading' | 'success' | 'failure';
-
 export const App = () => {
-  const [todos, setTodos] = useState<TodoType[] | undefined>();
-  const [status, setStatus] = useState<Status>('idle');
+  const [
+    todos, 
+    setTodos
+  ] = useState<TodoType[] | undefined>();
+  
+  const [
+    status, 
+    setStatus
+  ] = useState<Status>('idle');
+
+  const {
+    apiFetch
+  } = useContext(DependencyContext);
 
   useEffect(() => {
     if (status !== 'idle') {
@@ -43,12 +55,13 @@ export const App = () => {
       setStatus('loading');
 
       try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-        const todos = await response.json();
+        const fetchedTodos = (await apiFetch<FetchedTodoType[]>('todos')).map(
+          ({ userId, ...todo }) => todo
+        );
 
-        setTodos(todos.map(
-          ({ userId, ...todo }: ({ userId: number } & TodoType)) => todo
-        ));
+        // TBD: fetchedTodos validation, e.g. using a library such as ajv.
+
+        setTodos(fetchedTodos);
         setStatus('success');
       } catch (error) {
         setStatus('failure');
@@ -56,7 +69,7 @@ export const App = () => {
     };
 
     fetchTodos();
-  }, [status]);
+  }, [status, apiFetch]);
 
   useEffect(() => {
     document.title = todos
